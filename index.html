@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monitor — SLM Observability Suite</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon">◉</div>
+        <div class="brand-text">
+          <span class="brand-name">Monitor</span>
+          <span class="brand-sub">SLM Observability</span>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-btn active" data-section="overview"><span class="nav-icon">■</span><span>Overview</span></button>
+        <button class="nav-btn" data-section="traces"><span class="nav-icon">≈</span><span>Traces</span></button>
+        <button class="nav-btn" data-section="latency"><span class="nav-icon">◈</span><span>Latency</span></button>
+        <button class="nav-btn" data-section="costs"><span class="nav-icon">$</span><span>Costs</span></button>
+        <button class="nav-btn" data-section="quality"><span class="nav-icon">★</span><span>Quality</span></button>
+        <button class="nav-btn" data-section="ci"><span class="nav-icon">▲</span><span>CI Gating</span></button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="conn-status" id="connStatus"><span class="dot online"></span> Ollama Connected</div>
+        <div class="settings-group">
+          <label class="settings-label">Ingest Endpoint</label>
+          <input type="text" id="ingestUrl" value="http://localhost:11434" class="settings-input">
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+
+      <!-- OVERVIEW -->
+      <section class="section active" id="section-overview">
+        <div class="section-header">
+          <h1>Overview</h1>
+          <p class="section-desc">Real-time monitoring dashboard for your SLM inference pipeline</p>
+          <div class="overview-stats">
+            <div class="stat-card"><div class="stat-val" id="ovTotalRequests">0</div><div class="stat-lbl">Total Requests</div></div>
+            <div class="stat-card"><div class="stat-val" id="ovAvgLatency">—</div><div class="stat-lbl">Avg Latency (ms)</div></div>
+            <div class="stat-card"><div class="stat-val" id="ovP95Latency">—</div><div class="stat-lbl">p95 Latency (ms)</div></div>
+            <div class="stat-card"><div class="stat-val" id="ovTotalCost">$0.00</div><div class="stat-lbl">Total Cost</div></div>
+            <div class="stat-card"><div class="stat-val" id="ovAvgScore">—</div><div class="stat-lbl">Avg Quality Score</div></div>
+            <div class="stat-card"><div class="stat-val" id="ovRegressions">0</div><div class="stat-lbl">Regressions Detected</div></div>
+          </div>
+        </div>
+        <div class="overview-grid">
+          <div class="card"><div class="card-header"><h3>Latency Trend (last 20)</h3></div><div class="card-body"><div class="mini-chart" id="latencySparkline"></div></div></div>
+          <div class="card"><div class="card-header"><h3>Cost Trend (last 20)</h3></div><div class="card-body"><div class="mini-chart" id="costSparkline"></div></div></div>
+          <div class="card"><div class="card-header"><h3>Quality Trend (last 20)</h3></div><div class="card-body"><div class="mini-chart" id="qualitySparkline"></div></div></div>
+          <div class="card"><div class="card-header"><h3>Top Models by Usage</h3></div><div class="card-body"><div id="topModelsList"></div></div></div>
+        </div>
+      </section>
+
+      <!-- TRACES -->
+      <section class="section" id="section-traces">
+        <div class="section-header">
+          <h1>Traces</h1>
+          <p class="section-desc">Distributed tracing for every inference request</p>
+          <div class="trace-controls">
+            <input type="text" id="traceSearch" placeholder="Search by model, span, or trace ID..." class="form-input" style="flex:1">
+            <select id="traceFilter" class="form-select" style="width:140px">
+              <option value="all">All Spans</option>
+              <option value="model_load">Model Load</option>
+              <option value="prompt_eval">Prompt Eval</option>
+              <option value="inference">Inference</option>
+              <option value="token_generation">Token Generation</option>
+            </select>
+            <button class="btn btn-outline" onclick="clearTraces()">Clear</button>
+          </div>
+          <button class="btn btn-primary" onclick="generateTrace()">Generate Sample Trace</button>
+        </div>
+        <div class="trace-list" id="traceList">
+          <p class="text-muted" style="padding:40px;text-align:center">No traces recorded. Generate a sample or run a benchmark to create traces.</p>
+        </div>
+      </section>
+
+      <!-- LATENCY -->
+      <section class="section" id="section-latency">
+        <div class="section-header">
+          <h1>Latency Analytics</h1>
+          <p class="section-desc">p50, p95, p99 latency tracking with distribution analysis</p>
+        </div>
+        <div class="latency-grid">
+          <div class="card"><div class="card-header"><h3>Percentile Distribution</h3></div><div class="card-body"><div class="percentile-chart" id="percentileChart"></div></div></div>
+          <div class="card"><div class="card-header"><h3>Latency Heatmap</h3></div><div class="card-body"><div class="heatmap" id="latencyHeatmap"></div></div></div>
+        </div>
+        <div class="latency-breakdown">
+          <div class="card">
+            <div class="card-header"><h3>Latency by Model</h3></div>
+            <div class="card-body"><table class="table"><thead><tr><th>Model</th><th>p50 (ms)</th><th>p95 (ms)</th><th>p99 (ms)</th><th>Avg (ms)</th><th>Requests</th></tr></thead><tbody id="latencyByModel"></tbody></table></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COSTS -->
+      <section class="section" id="section-costs">
+        <div class="section-header">
+          <h1>Cost Tracking</h1>
+          <p class="section-desc">Per-request cost estimation based on token usage and compute</p>
+          <div class="cost-settings">
+            <div class="cost-field"><label>$/1M input tokens</label><input type="number" id="costPerInput" value="0.15" step="0.01" class="form-input"></div>
+            <div class="cost-field"><label>$/1M output tokens</label><input type="number" id="costPerOutput" value="0.60" step="0.01" class="form-input"></div>
+            <div class="cost-field"><label>$/hr compute</label><input type="number" id="costPerCompute" value="0.50" step="0.01" class="form-input"></div>
+            <button class="btn btn-primary" onclick="recalcCosts()">Recalculate</button>
+          </div>
+        </div>
+        <div class="cost-grid">
+          <div class="card"><div class="card-header"><h3>Cost Summary</h3></div><div class="card-body"><div class="cost-summary" id="costSummary"></div></div></div>
+          <div class="card"><div class="card-header"><h3>Cost by Model</h3></div><div class="card-body"><table class="table"><thead><tr><th>Model</th><th>Requests</th><th>Total Cost</th><th>Avg Cost/Req</th><th>Tokens/Req</th></tr></thead><tbody id="costByModel"></tbody></table></div></div>
+        </div>
+      </section>
+
+      <!-- QUALITY -->
+      <section class="section" id="section-quality">
+        <div class="section-header">
+          <h1>Quality Metrics</h1>
+          <p class="section-desc">Response quality scoring, relevance tracking, and drift detection</p>
+        </div>
+        <div class="quality-controls">
+          <button class="btn btn-primary" onclick="scoreRandomResponse()">Score Random Response</button>
+          <button class="btn btn-outline" onclick="simulateQualityDrift()">Simulate Drift</button>
+        </div>
+        <div class="quality-grid">
+          <div class="card"><div class="card-header"><h3>Quality Score Distribution</h3></div><div class="card-body"><div class="quality-dist" id="qualityDist"></div></div></div>
+          <div class="card"><div class="card-header"><h3>Quality by Model</h3></div><div class="card-body"><table class="table"><thead><tr><th>Model</th><th>Avg Score</th><th>Scores</th><th>Trend</th><th>Drift</th></tr></thead><tbody id="qualityByModel"></tbody></table></div></div>
+        </div>
+        <div class="quality-scores-list">
+          <div class="card">
+            <div class="card-header"><h3>Recent Scores</h3></div>
+            <div class="card-body"><table class="table"><thead><tr><th>Time</th><th>Model</th><th>Score</th><th>Relevance</th><th>Fluency</th><th>Brevity</th></tr></thead><tbody id="qualityScoresList"></tbody></table></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CI GATING -->
+      <section class="section" id="section-ci">
+        <div class="section-header">
+          <h1>CI Regression Gating</h1>
+          <p class="section-desc">Automated regression detection for model updates & deployment gating</p>
+        </div>
+        <div class="ci-controls">
+          <div class="ci-field"><label>Baseline Model</label><input type="text" id="ciBaseline" value="qwen2.5:1.5b" class="form-input"></div>
+          <div class="ci-field"><label>Candidate Model</label><input type="text" id="ciCandidate" value="llama3.2:1b" class="form-input"></div>
+          <div class="ci-field"><label>Test Count</label><input type="number" id="ciCount" value="10" class="form-input" style="width:80px"></div>
+          <button class="btn btn-primary" onclick="runCIGate()">Run Gate</button>
+        </div>
+        <div class="ci-progress" id="ciProgress" style="display:none">
+          <div class="progress-bar"><div class="progress-fill" id="ciProgressFill"></div></div>
+          <p id="ciProgressText">Running CI pipeline...</p>
+        </div>
+        <div class="ci-results" id="ciResults" style="display:none">
+          <div class="ci-verdict" id="ciVerdict"></div>
+          <div class="ci-metrics-grid" id="ciMetricsGrid"></div>
+          <div class="card"><div class="card-header"><h3>Gate Results</h3></div><div class="card-body"><table class="table"><thead><tr><th>Metric</th><th>Baseline</th><th>Candidate</th><th>Δ</th><th>Verdict</th></tr></thead><tbody id="ciTableBody"></tbody></table></div></div>
+          <div class="card"><div class="card-header"><h3>CI Pipeline History</h3></div><div class="card-body"><table class="table"><thead><tr><th>Run ID</th><th>Baseline</th><th>Candidate</th><th>Pass/Fail</th><th>Regressions</th><th>Timestamp</th></tr></thead><tbody id="ciHistoryBody"></tbody></table></div></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="js/tracing.js"></script>
+  <script src="js/latency.js"></script>
+  <script src="js/costs.js"></script>
+  <script src="js/quality.js"></script>
+  <script src="js/ci-gating.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

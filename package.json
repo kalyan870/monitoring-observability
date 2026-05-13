@@ -1,0 +1,5 @@
+{
+  "name": "monitoring-observability",
+  "version": "1.0.0",
+  "description": "SLM Observability Suite — Tracing, Latency, Costs, Quality, CI Gating"
+}
