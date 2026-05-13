@@ -1,0 +1,191 @@
+<svg viewBox="0 0 720 800" xmlns="http://www.w3.org/2000/svg" width="720" height="800" style="background:#ffffff;font-family:'Courier New',monospace">
+<title>SLM Observability Suite — RAGAS Structured Process Flow</title>
+<defs>
+  <marker id="ar" markerWidth="9" markerHeight="8" refX="7" refY="4" orient="auto">
+    <path d="M0,0.5 L0,7.5 L8,4 z" fill="#5a5a6e"/>
+  </marker>
+  <style>
+    .box-gray { fill:#f0efea; stroke:#7a7a88; stroke-width:1.2; }
+    .box-blue { fill:#e4eef9; stroke:#2d6fb5; stroke-width:1.2; }
+    .box-amber { fill:#faecd8; stroke:#a06010; stroke-width:1.2; }
+    .box-teal { fill:#ddf2ea; stroke:#0e6e52; stroke-width:1.2; }
+    .box-green { fill:#e2f3d8; stroke:#3a6d10; stroke-width:1.2; }
+    .box-red { fill:#fce8e8; stroke:#a32020; stroke-width:1.2; }
+    .box-purple { fill:#ecedfb; stroke:#5040b0; stroke-width:1.2; }
+    .txt-head { font-size:13px; font-weight:700; fill:#1a1a2e; }
+    .txt-sub { font-size:10px; fill:#555566; }
+    .txt-span { font-size:11px; font-weight:600; fill:#1a3060; }
+    .txt-amber { font-size:11px; font-weight:600; fill:#5a3000; }
+    .txt-teal { font-size:11px; font-weight:600; fill:#053d2c; }
+    .txt-green-h { font-size:13px; font-weight:700; fill:#1a3d08; }
+    .txt-red-h { font-size:13px; font-weight:700; fill:#5a0808; }
+    .txt-purple-h { font-size:13px; font-weight:700; fill:#2a1878; }
+    .txt-label { font-size:9px; fill:#999aaa; letter-spacing:0.08em; }
+    .conn { stroke:#888899; stroke-width:1.3; fill:none; marker-end:url(#ar); }
+    .conn-plain { stroke:#888899; stroke-width:1.3; fill:none; }
+    .ragas-tag { fill:#0e6e52; font-size:9px; font-weight:700; fill:#fff; }
+  </style>
+</defs>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!--  ROW 1: SLM Inference Request                  -->
+<!-- ═══════════════════════════════════════════════ -->
+<rect x="250" y="18" width="220" height="46" rx="7" class="box-gray"/>
+<text x="360" y="37" text-anchor="middle" class="txt-head" fill="#3a3a4e">SLM Inference Request</text>
+<text x="360" y="54" text-anchor="middle" class="txt-sub">user prompt → model endpoint</text>
+<line x1="360" y1="64" x2="360" y2="84" class="conn"/>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!--  ROW 2: Ingest Endpoint                        -->
+<!-- ═══════════════════════════════════════════════ -->
+<rect x="255" y="86" width="210" height="46" rx="7" class="box-blue"/>
+<text x="360" y="105" text-anchor="middle" class="txt-head" fill="#1a3878">Ingest Endpoint</text>
+<text x="360" y="122" text-anchor="middle" class="txt-sub">Ollama Connected · REST · SSE stream</text>
+<line x1="360" y1="132" x2="360" y2="152" class="conn"/>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!--  ROW 3: Distributed Tracing banner             -->
+<!-- ═══════════════════════════════════════════════ -->
+<rect x="90" y="154" width="540" height="32" rx="7" class="box-blue"/>
+<text x="360" y="175" text-anchor="middle" class="txt-head" fill="#1a3878">Distributed Tracing</text>
+
+<!-- 4 Span boxes: each 118w gap 8 → total=4×118+3×8=496 x start=(720-496)/2=112 -->
+<rect x="112" y="200" width="114" height="32" rx="5" class="box-blue"/>
+<text x="169" y="221" text-anchor="middle" class="txt-span">Model Load</text>
+<line x1="226" y1="216" x2="232" y2="216" stroke="#2d6fb5" stroke-width="1.2" marker-end="url(#ar)"/>
+
+<rect x="234" y="200" width="114" height="32" rx="5" class="box-blue"/>
+<text x="291" y="221" text-anchor="middle" class="txt-span">Prompt Eval</text>
+<line x1="348" y1="216" x2="354" y2="216" stroke="#2d6fb5" stroke-width="1.2" marker-end="url(#ar)"/>
+
+<rect x="356" y="200" width="114" height="32" rx="5" class="box-blue"/>
+<text x="413" y="221" text-anchor="middle" class="txt-span">Inference</text>
+<line x1="470" y1="216" x2="476" y2="216" stroke="#2d6fb5" stroke-width="1.2" marker-end="url(#ar)"/>
+
+<rect x="478" y="200" width="114" height="32" rx="5" class="box-blue"/>
+<text x="535" y="221" text-anchor="middle" class="txt-span">Token Gen</text>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!--  3-WAY SPLIT                                   -->
+<!-- ═══════════════════════════════════════════════ -->
+<line x1="360" y1="232" x2="360" y2="258" class="conn-plain"/>
+<line x1="140" y1="258" x2="580" y2="258" class="conn-plain"/>
+<line x1="140" y1="258" x2="140" y2="278" class="conn"/>
+<line x1="360" y1="258" x2="360" y2="278" class="conn"/>
+<line x1="580" y1="258" x2="580" y2="278" class="conn"/>
+<text x="140" y="270" text-anchor="middle" class="txt-label">LATENCY</text>
+<text x="360" y="270" text-anchor="middle" class="txt-label">COST</text>
+<text x="580" y="270" text-anchor="middle" class="txt-label">QUALITY</text>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!--  ROW 4: 3 metric column headers                -->
+<!-- ═══════════════════════════════════════════════ -->
+<!-- Col 1: Latency center=140 x=52 w=176 -->
+<rect x="52" y="280" width="176" height="46" rx="7" class="box-blue"/>
+<text x="140" y="298" text-anchor="middle" class="txt-head" fill="#1a3878">Latency Analytics</text>
+<text x="140" y="316" text-anchor="middle" class="txt-sub">p50 · p95 · p99 · heatmap</text>
+
+<!-- Col 2: Cost center=360 x=272 w=176 -->
+<rect x="272" y="280" width="176" height="46" rx="7" class="box-amber"/>
+<text x="360" y="298" text-anchor="middle" class="txt-head" fill="#4a2800">Cost Tracking</text>
+<text x="360" y="316" text-anchor="middle" class="txt-sub">input · output · compute/hr</text>
+
+<!-- Col 3: Quality center=580 x=492 w=176 -->
+<rect x="492" y="280" width="176" height="46" rx="7" class="box-teal"/>
+<!-- RAGAS badge -->
+<rect x="492" y="280" width="48" height="18" rx="4" fill="#0e6e52"/>
+<text x="516" y="293" text-anchor="middle" style="font-size:9px;font-weight:700;fill:#fff">RAGAS</text>
+<text x="580" y="300" text-anchor="middle" class="txt-head" fill="#053d2c">Quality Scoring</text>
+<text x="580" y="316" text-anchor="middle" class="txt-sub">response quality · drift detect</text>
+
+<!-- Column detail rows y=334 -->
+<line x1="140" y1="326" x2="140" y2="336" class="conn"/>
+<rect x="52" y="338" width="176" height="40" rx="5" class="box-blue"/>
+<text x="140" y="354" text-anchor="middle" class="txt-sub">per-model distribution</text>
+<text x="140" y="369" text-anchor="middle" class="txt-sub">latency heatmap view</text>
+
+<line x1="360" y1="326" x2="360" y2="336" class="conn"/>
+<rect x="272" y="338" width="176" height="40" rx="5" class="box-amber"/>
+<text x="360" y="354" text-anchor="middle" class="txt-sub">per-model cost summary</text>
+<text x="360" y="369" text-anchor="middle" class="txt-sub">avg cost / request</text>
+
+<!-- RAGAS 3 sub-scores under quality -->
+<line x1="580" y1="326" x2="580" y2="336" class="conn"/>
+<!-- 3 boxes: 52w gap 5 total=166 center=580 x start=497 -->
+<rect x="497" y="338" width="52" height="40" rx="5" class="box-teal"/>
+<text x="523" y="353" text-anchor="middle" class="txt-teal" style="font-size:10px">Relevance</text>
+<text x="523" y="368" text-anchor="middle" class="txt-sub">score</text>
+
+<rect x="554" y="338" width="52" height="40" rx="5" class="box-teal"/>
+<text x="580" y="353" text-anchor="middle" class="txt-teal" style="font-size:10px">Fluency</text>
+<text x="580" y="368" text-anchor="middle" class="txt-sub">score</text>
+
+<rect x="611" y="338" width="57" height="40" rx="5" class="box-teal"/>
+<text x="639" y="353" text-anchor="middle" class="txt-teal" style="font-size:10px">Brevity</text>
+<text x="639" y="368" text-anchor="middle" class="txt-sub">score</text>
+
+<!-- Drift Detection -->
+<line x1="580" y1="378" x2="580" y2="390" class="conn"/>
+<rect x="492" y="392" width="176" height="38" rx="5" class="box-teal"/>
+<text x="580" y="408" text-anchor="middle" class="txt-head" fill="#053d2c" style="font-size:11px">Drift Detection</text>
+<text x="580" y="422" text-anchor="middle" class="txt-sub">score regression alert</text>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!--  CONVERGE to CI Gate                           -->
+<!-- ═══════════════════════════════════════════════ -->
+<line x1="140" y1="378" x2="140" y2="460" class="conn-plain"/>
+<line x1="360" y1="378" x2="360" y2="460" class="conn-plain"/>
+<line x1="580" y1="430" x2="580" y2="460" class="conn-plain"/>
+<line x1="140" y1="460" x2="580" y2="460" class="conn-plain"/>
+<line x1="360" y1="460" x2="360" y2="474" class="conn"/>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!--  CI Regression Gate                            -->
+<!-- ═══════════════════════════════════════════════ -->
+<rect x="150" y="476" width="420" height="54" rx="8" class="box-purple"/>
+<text x="360" y="497" text-anchor="middle" class="txt-head" fill="#2a1878" style="font-size:14px">CI Regression Gate</text>
+<text x="360" y="516" text-anchor="middle" class="txt-sub">baseline vs candidate · latency · cost · quality thresholds · auto-gate</text>
+
+<!-- PASS / FAIL split arrows -->
+<line x1="264" y1="530" x2="214" y2="554" class="conn"/>
+<line x1="456" y1="530" x2="506" y2="554" class="conn"/>
+
+<!-- PASS -->
+<rect x="124" y="556" width="160" height="46" rx="7" class="box-green"/>
+<text x="204" y="575" text-anchor="middle" class="txt-green-h">PASS  ✓</text>
+<text x="204" y="591" text-anchor="middle" class="txt-sub">deploy to production</text>
+
+<!-- FAIL -->
+<rect x="436" y="556" width="160" height="46" rx="7" class="box-red"/>
+<text x="516" y="575" text-anchor="middle" class="txt-red-h">FAIL  ✗</text>
+<text x="516" y="591" text-anchor="middle" class="txt-sub">block · alert on-call</text>
+
+<!-- Merge both to dashboard -->
+<line x1="204" y1="602" x2="204" y2="640" class="conn-plain"/>
+<line x1="516" y1="602" x2="516" y2="640" class="conn-plain"/>
+<line x1="204" y1="640" x2="316" y2="640" class="conn-plain"/>
+<line x1="516" y1="640" x2="404" y2="640" class="conn-plain"/>
+<line x1="360" y1="640" x2="360" y2="656" class="conn"/>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!--  Overview Dashboard                            -->
+<!-- ═══════════════════════════════════════════════ -->
+<rect x="170" y="658" width="380" height="52" rx="8" class="box-purple"/>
+<text x="360" y="678" text-anchor="middle" class="txt-purple-h" style="font-size:14px">Overview Dashboard</text>
+<text x="360" y="697" text-anchor="middle" class="txt-sub">requests · avg latency · total cost · quality score · regressions · real-time</text>
+
+<!-- Legend -->
+<rect x="52" y="726" width="616" height="1" fill="#ccccdd"/>
+<rect x="52" y="734" width="10" height="10" rx="2" class="box-blue"/>
+<text x="68" y="743" class="txt-sub">Tracing / Latency</text>
+<rect x="180" y="734" width="10" height="10" rx="2" class="box-amber"/>
+<text x="196" y="743" class="txt-sub">Cost</text>
+<rect x="260" y="734" width="10" height="10" rx="2" class="box-teal"/>
+<text x="276" y="743" class="txt-sub">Quality / RAGAS</text>
+<rect x="400" y="734" width="10" height="10" rx="2" class="box-purple"/>
+<text x="416" y="743" class="txt-sub">Gate / Dashboard</text>
+<rect x="558" y="734" width="10" height="10" rx="2" class="box-green"/>
+<text x="574" y="743" class="txt-sub">Pass</text>
+<rect x="612" y="734" width="10" height="10" rx="2" class="box-red"/>
+<text x="628" y="743" class="txt-sub">Fail</text>
+</svg>
