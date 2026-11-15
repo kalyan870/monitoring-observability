@@ -1,6 +1,12 @@
 const ciHistory = [];
 let ciRunCounter = 0;
 
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>\"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#39;',
+  })[char]);
+}
+
 const CI_METRICS = ['latency_p50', 'latency_p95', 'tokens_per_sec', 'quality_score', 'cost_per_request'];
 
 async function runCIGate() {
@@ -237,8 +243,8 @@ function renderCIHistory() {
   tbody.innerHTML = ciHistory.map(r => `
     <tr>
       <td class="mono">${r.id}</td>
-      <td>${r.baseline}</td>
-      <td>${r.candidate}</td>
+      <td>${escapeHtml(r.baseline)}</td>
+      <td>${escapeHtml(r.candidate)}</td>
       <td>${r.verdict.pass ? '<span class="pass-badge">PASS</span>' : '<span class="fail-badge">FAIL</span>'}</td>
       <td>${r.verdict.regressions.length}</td>
       <td class="mono">${new Date(r.timestamp).toLocaleTimeString()}</td>
