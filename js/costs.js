@@ -52,7 +52,7 @@ function renderCosts() {
 
   tbody.innerHTML = Object.entries(byModel).map(([model, data]) => `
     <tr>
-      <td><strong>${model}</strong></td>
+      <td><strong>${escapeHtml(model)}</strong></td>
       <td>${data.requests}</td>
       <td class="mono">$${data.cost.toFixed(4)}</td>
       <td class="mono">$${(data.cost / data.requests).toFixed(6)}</td>

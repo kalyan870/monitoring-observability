@@ -108,13 +108,13 @@ function renderTraces() {
       <div class="trace-item ${t.status === 'error' ? 'trace-error' : ''}">
         <div class="trace-header">
           <div>
-            <span class="trace-model">${t.model}</span>
-            <span class="trace-id">${t.id}</span>
+            <span class="trace-model">${escapeHtml(t.model)}</span>
+            <span class="trace-id">${escapeHtml(t.id)}</span>
           </div>
           <div style="display:flex;align-items:center;gap:10px">
-            <span style="font-size:11px;color:var(--text-muted)">${t.inputTokens} in / ${t.outputTokens} out</span>
+            <span style="font-size:11px;color:var(--text-muted)">${escapeHtml(t.inputTokens)} in / ${escapeHtml(t.outputTokens)} out</span>
             <span class="trace-duration">${(t.totalDuration * 1000).toFixed(0)}ms</span>
-            <span class="tag ${t.status === 'success' ? 'low' : 'high'}">${t.status}</span>
+            <span class="tag ${t.status === 'success' ? 'low' : 'high'}">${escapeHtml(t.status)}</span>
           </div>
         </div>
         <div class="trace-spans">
@@ -122,9 +122,9 @@ function renderTraces() {
             const pct = (s.duration / maxSpanDur) * 100;
             return `
               <div class="trace-span">
-                <span class="span-name">${s.name}</span>
+                <span class="span-name">${escapeHtml(s.name)}</span>
                 <div style="flex:1;height:4px;background:var(--bg-primary);border-radius:2px;overflow:hidden">
-                  <div class="span-bar ${s.type}" style="width:${Math.max(pct, 10)}%"></div>
+                  <div class="span-bar ${escapeHtml(s.type)}" style="width:${Math.max(pct, 10)}%"></div>
                 </div>
                 <span class="span-dur">${(s.duration * 1000).toFixed(0)}ms</span>
               </div>
