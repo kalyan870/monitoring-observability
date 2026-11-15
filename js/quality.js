@@ -99,7 +99,7 @@ function renderQuality() {
     const trendClass = trend > 2 ? 'pass-badge' : trend < -2 ? 'fail-badge' : '';
     return `
       <tr>
-        <td><strong>${model}</strong></td>
+        <td><strong>${escapeHtml(model)}</strong></td>
         <td class="mono">${avg.toFixed(1)}</td>
         <td>${mscores.length}</td>
         <td class="${trendClass}">${trendStr} ${trend.toFixed(1)}</td>
@@ -112,7 +112,7 @@ function renderQuality() {
   listBody.innerHTML = scores.slice(-30).reverse().map(s => `
     <tr>
       <td class="mono">${new Date(s.timestamp).toLocaleTimeString()}</td>
-      <td>${s.model}</td>
+      <td>${escapeHtml(s.model)}</td>
       <td class="mono"><strong>${s.overall}</strong></td>
       <td class="mono">${s.relevance}</td>
       <td class="mono">${s.fluency}</td>
