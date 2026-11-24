@@ -1,5 +1,11 @@
 const STORE_KEY = 'monitor_observability_store';
 
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, (character) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[character]);
+}
+
 function getStore() {
   try {
     const raw = localStorage.getItem(STORE_KEY);
@@ -99,7 +105,7 @@ function renderOverview() {
         const pct = ((count / total) * 100).toFixed(0);
         return `
           <div class="info-row">
-            <span class="info-label" style="font-size:12px">${model}</span>
+            <span class="info-label" style="font-size:12px">${escapeHtml(model)}</span>
             <span class="info-value" style="display:flex;align-items:center;gap:8px">
               <div style="flex:1;height:4px;background:var(--bg-primary);border-radius:2px;overflow:hidden">
                 <div style="height:100%;width:${pct}%;background:var(--accent);border-radius:2px"></div>

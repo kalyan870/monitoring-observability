@@ -66,7 +66,7 @@ function renderLatency() {
     const rVal = Math.floor(108 + (231 - 108) * intensity);
     const gVal = Math.floor(92 - 92 * intensity);
     const bVal = Math.floor(231 - 200 * intensity);
-    return `<div class="heatmap-cell" style="background:rgb(${rVal},${gVal},${bVal})" title="${r.model}: ${r.latency.toFixed(0)}ms"></div>`;
+    return `<div class="heatmap-cell" style="background:rgb(${rVal},${gVal},${bVal})" title="${escapeHtml(r.model)}: ${r.latency.toFixed(0)}ms"></div>`;
   }).join('');
 
   // By model
@@ -80,7 +80,7 @@ function renderLatency() {
     const sorted = lats.sort((a, b) => a - b);
     return `
       <tr>
-        <td><strong>${model}</strong></td>
+        <td><strong>${escapeHtml(model)}</strong></td>
         <td class="mono">${percentile(sorted, 50).toFixed(0)}</td>
         <td class="mono">${percentile(sorted, 95).toFixed(0)}</td>
         <td class="mono">${percentile(sorted, 99).toFixed(0)}</td>
