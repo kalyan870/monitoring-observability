@@ -1,6 +1,7 @@
 # SLM Observability Lab
 
 <p align="center"><strong>A browser dashboard prototype for exploring traces, latency, cost estimates, quality checks, and CI-style gates for local language-model workflows.</strong></p>
+**Live link:** [https://monitoring-observability.vercel.app/](https://monitoring-observability.vercel.app/)
 
 <p align="center">HTML · CSS · JavaScript · Browser local storage · Ollama API</p>
 
@@ -17,6 +18,11 @@ The app is a static, client-side observability workbench. Its panels organize tr
 - Browser-persisted dashboard state
 
 ## Architecture
+
+![monitoring-observability architecture map](docs/images/monitoring-observability-architecture.png)
+
+[Architecture notes](docs/architecture.md) · [Editable SVG](docs/images/monitoring-observability-architecture.svg)
+
 
 ```mermaid
 flowchart LR
